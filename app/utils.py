@@ -1,13 +1,21 @@
 import os
-from passlib.context import CryptContext
-from dotenv import load_dotenv
-from datetime import timedelta, datetime, timezone
 from jose import jwt
+from dotenv import load_dotenv
+from passlib.context import CryptContext
+from datetime import timedelta, datetime, timezone
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(password: str, hashed_pw: str) -> bool:
+    return pwd_context.verify(password, hashed_pw)
 
 
 def create_access_token(data: dict, expired_delta: timedelta or None = None) -> str:
@@ -22,11 +30,3 @@ def create_access_token(data: dict, expired_delta: timedelta or None = None) -> 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     
     return encoded_jwt
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
-
-def verify_password(password: str, hashed_pw: str) -> bool:
-    return pwd_context.verify(password, hashed_pw)
