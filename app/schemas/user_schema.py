@@ -1,12 +1,12 @@
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, constr, EmailStr
 
 class LoginRequest(BaseModel):
-    email: str
+    email: EmailStr
     password: str
     
 class RegisterRequest(BaseModel):
     username: constr(min_length=6)
-    email: str
+    email: EmailStr
     password: constr(min_length=6)
     
 class Token(BaseModel):
