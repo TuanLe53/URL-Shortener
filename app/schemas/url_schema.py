@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 class URLBase(BaseModel):
-    target_url: str
+    long_url: HttpUrl
