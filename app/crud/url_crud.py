@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 from models.url_model import URL
 from models.user_model import User
 from schemas.url_schema import URLBase
@@ -29,3 +30,9 @@ def create_short_url(request: URLBase, user: User, session: Session) -> URL:
     session.refresh(new_url)
     
     return new_url
+
+def update_on_click(url: URL, session: Session) -> None:
+    url.clicks += 1
+    url.last_visited = func.now()
+    
+    session.commit()
