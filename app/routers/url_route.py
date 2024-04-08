@@ -6,7 +6,7 @@ from typing import Annotated
 from dependencies import get_current_user
 from db.database import get_db
 from models.user_model import User
-from crud.url_crud import get_url_by_long, create_short_url, get_url_by_short
+from crud.url_crud import get_url_by_long, create_short_url, get_url_by_short, update_on_click
 
 router = APIRouter(prefix="/url")
 
@@ -26,5 +26,7 @@ async def go_to_url(url_id: str, db: Session = Depends(get_db)):
     url = get_url_by_short(url_id, db)
     if not url:
         raise HTTPException(status_code=404, detail="Not Found")
+    
+    update_on_click(url, db)
     
     return RedirectResponse(url.long_url, status_code=302)
